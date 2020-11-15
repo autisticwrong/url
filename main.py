@@ -1,6 +1,5 @@
 from flask import Flask, redirect, render_template, request
 import random, string, json
-from threading import Thread
 
 app = Flask(__name__)
 
@@ -40,13 +39,5 @@ def redirect_url(id):
     #return render_template("index.html")
     return redirect(url)
 
-def run():
-  app.run(host='0.0.0.0',port=8080)
-
-def host():  
-    t = Thread(target=run)
-    t.start()
-
 if __name__ == '__main__':
-  #app.run(host='0.0.0.0', port=8080, debug=True)
-  host()
+  app.run(host='0.0.0.0', port=8080, debug=True)
