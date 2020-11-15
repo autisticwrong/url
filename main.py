@@ -13,14 +13,21 @@ def check_user(id, link):
     data[str(id)]["link"] = link
     dumps = open("url.json", "w")
     json.dump(data, dumps, indent = 4)
-    return
+    return True
+  else:
+    return False
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
   if request.method == "POST":
     link = request.form['link']
     id = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
-    check_user(id, link)
+    check = check_user(id, link)
+    while check is False:
+      id = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
+      check = check_user(id, link)
+      print("false")
+    
     return render_template("newlink.html", link=id)
 
   if request.method == 'GET':
