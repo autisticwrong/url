@@ -3,17 +3,6 @@ import random, string, json
 
 app = Flask(__name__)
 
-def data(id, link):
-  x = {
-      "data": {
-        "id": id,
-        "link": link
-      }
-    }
-
-  with open("url.json", "w") as f:
-    json.dump(x, f)
-    
 def check_user(id, link):
   """Add to list of ID"""
   file = open("url.json", "r")
@@ -25,19 +14,13 @@ def check_user(id, link):
     dumps = open("url.json", "w")
     json.dump(data, dumps, indent = 4)
     return
-  else:
-    pass
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
   if request.method == "POST":
     link = request.form['link']
-    #return redirect(link)
-    
     id = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
-    #id = "deeznuts"
     check_user(id, link)
-    #data(id, link)
     return render_template("newlink.html", link=id)
 
   if request.method == 'GET':
@@ -47,10 +30,6 @@ def home():
 
 @app.route("/<id>")
 def redirect_url(id):
-  pass
-  #link = request.form['link']
-  #return redirect(link)
-  
   try:
     file = open("url.json", "r")
     data = json.load(file)
@@ -59,7 +38,6 @@ def redirect_url(id):
   except:
     return
   
-  #if id in data[str(id)]:
   if id in data:
     url = data[str(id)]["link"]
     print(url)
