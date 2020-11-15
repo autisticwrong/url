@@ -14,9 +14,19 @@ def data(id, link):
   with open("url.json", "w") as f:
     json.dump(x, f)
     
-def append_id(id):
+def check_user(id, link):
   """Add to list of ID"""
-  pass
+  file = open("url.json", "r")
+  data = json.load(file)
+
+  if not str(id) in data:
+    data[str(id)] = {}
+    data[str(id)]["link"] = link
+    dumps = open("url.json", "w")
+    json.dump(data, dumps, indent = 4)
+    return
+  else:
+    pass
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -26,29 +36,35 @@ def home():
     
     id = "".join(random.choices(string.ascii_lowercase + string.digits, k=6))
     #id = "deeznuts"
-    data(id, link)
+    check_user(id, link)
+    #data(id, link)
     return render_template("newlink.html", link=id)
 
   if request.method == 'GET':
     return render_template("index.html")
+    
+  return render_template("index.html")
 
 @app.route("/<id>")
 def redirect_url(id):
+  pass
   #link = request.form['link']
   #return redirect(link)
   
   try:
     file = open("url.json", "r")
     data = json.load(file)
+    #print(data)
 
   except:
     return
   
-  if data["data"]["id"] == id:
-    url = data["data"]["link"]
+  #if id in data[str(id)]:
+  if id in data:
+    url = data[str(id)]["link"]
     print(url)
     return redirect(url)
-    
+
   else:
     return render_template("404.html")
   
@@ -64,4 +80,4 @@ def redirect_url(id):
       return render_template("404.html")"""
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=8080, debug=True)
+  app.run(host='0.0.0.0', port=8080)
